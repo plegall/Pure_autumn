@@ -49,27 +49,21 @@ function Pure_autumn_thumbnails($tpl_thumbnails_var)
     global $template;
     $template->set_prefilter('index_thumbnails', 'Pure_autumn_prefilter_thumbnails');
     $template->set_prefilter('stuffs', 'Pure_autumn_prefilter_thumbnails');
+
+    foreach ($tpl_thumbnails_var as $idx => $thumbnail)
+    {
+      $tpl_thumbnails_var[$idx]['pure_autumn_random_class_number'] = mt_rand(1, 5);
+    }
+
 		return $tpl_thumbnails_var;
 }
 
 function Pure_autumn_prefilter_thumbnails($content)
 {
-  $pwgversion=str_replace('.','',PHPWG_VERSION);
-  $pwgversion_array=explode('.', PHPWG_VERSION);
-  if ($pwgversion_array[0].$pwgversion_array[1]=="23")
-  {
   $search = '#<li>[\s]*<span class="wrap1">#';
   
-  $replacement = '<li class="thumb_{"1"|mt_rand:5}"  >
+  $replacement = '<li class="thumb_{$thumbnail.pure_autumn_random_class_number}"  >
 	<span class="wrap1">';
-  }
-  elseif (version_compare(PHPWG_VERSION, '2.6', '>='))
-  {
-  $search = '#<li>[\s]*<span class="wrap1">#';
-  
-  $replacement = '<li class="thumb_{"1"|mt_rand:5}"  >
-	<span class="wrap1">';
-  }
 
   return preg_replace($search, $replacement, $content);
 }
